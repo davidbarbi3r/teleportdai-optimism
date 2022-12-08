@@ -1,0 +1,38 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: teleportDaiOptimism
+    network: optimism
+    source:
+      address: "0x18d2CF2296c5b29343755E6B7e37679818913f88"
+      abi: teleportDaiOptimism
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Closed
+        - Deny
+        - File
+        - Flushed
+        - Rely
+        - TeleportInitialized
+      abis:
+        - name: teleportDaiOptimism
+          file: ./abis/teleportDaiOptimism.json
+      eventHandlers:
+        - event: Closed()
+          handler: handleClosed
+        - event: Deny(indexed address)
+          handler: handleDeny
+        - event: File(indexed bytes32,indexed bytes32,uint256)
+          handler: handleFile
+        - event: Flushed(indexed bytes32,uint256)
+          handler: handleFlushed
+        - event: Rely(indexed address)
+          handler: handleRely
+        - event: TeleportInitialized((bytes32,bytes32,bytes32,bytes32,uint128,uint80,uint48))
+          handler: handleTeleportInitialized
+      file: ./src/teleport-dai-optimism.ts
