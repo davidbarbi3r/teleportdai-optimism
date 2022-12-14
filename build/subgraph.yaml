@@ -1,6 +1,6 @@
 specVersion: 0.0.4
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: teleportDaiOptimism
@@ -22,7 +22,7 @@ dataSources:
         - TeleportInitialized
       abis:
         - name: teleportDaiOptimism
-          file: ./abis/teleportDaiOptimism.json
+          file: teleportDaiOptimism/abis/teleportDaiOptimism.json
       eventHandlers:
         - event: Closed()
           handler: handleClosed
@@ -36,4 +36,4 @@ dataSources:
           handler: handleRely
         - event: TeleportInitialized((bytes32,bytes32,bytes32,bytes32,uint128,uint80,uint48))
           handler: handleTeleportInitialized
-      file: ./src/teleport-dai-optimism.ts
+      file: teleportDaiOptimism/teleportDaiOptimism.wasm
