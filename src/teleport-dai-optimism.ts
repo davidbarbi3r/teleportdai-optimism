@@ -76,6 +76,7 @@ export function handleTeleportInitialized(event: TeleportInitialized): void {
     user.countBridged = BigInt.fromI32(0)
     user.makerFees = BigInt.fromI32(0)
     user.relayFees = BigInt.fromI32(0)
+    user.save()
   }
 
   teleport.id = id
@@ -91,8 +92,7 @@ export function handleTeleportInitialized(event: TeleportInitialized): void {
     teleport.save()
   }
 
-  teleport.save()
-
+  
   //all entity setup
   let all = All.load("all");
   if (all == null) {
@@ -102,7 +102,7 @@ export function handleTeleportInitialized(event: TeleportInitialized): void {
     all.relayFees = BigInt.fromI32(0);
     all.countBridged = BigInt.fromI32(0);
   }
-
+  
   if (event.receipt){
     user.amountBridged = user.amountBridged.plus(amount)
     user.countBridged = user.countBridged.plus(BigInt.fromI32(1))
@@ -110,5 +110,8 @@ export function handleTeleportInitialized(event: TeleportInitialized): void {
     all.amountBridged = all.amountBridged.plus(amount)
     all.save()
   }
+  
+  teleport.save()
+  user.save()
   all.save()
 }
