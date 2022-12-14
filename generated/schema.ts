@@ -51,24 +51,6 @@ export class User extends Entity {
     this.set("amountBridged", Value.fromBigInt(value));
   }
 
-  get relayFees(): BigInt {
-    let value = this.get("relayFees");
-    return value!.toBigInt();
-  }
-
-  set relayFees(value: BigInt) {
-    this.set("relayFees", Value.fromBigInt(value));
-  }
-
-  get makerFees(): BigInt {
-    let value = this.get("makerFees");
-    return value!.toBigInt();
-  }
-
-  set makerFees(value: BigInt) {
-    this.set("makerFees", Value.fromBigInt(value));
-  }
-
   get countBridged(): BigInt {
     let value = this.get("countBridged");
     return value!.toBigInt();
@@ -145,24 +127,6 @@ export class Teleport extends Entity {
     }
   }
 
-  get destChain(): Bytes {
-    let value = this.get("destChain");
-    return value!.toBytes();
-  }
-
-  set destChain(value: Bytes) {
-    this.set("destChain", Value.fromBytes(value));
-  }
-
-  get originChain(): Bytes {
-    let value = this.get("originChain");
-    return value!.toBytes();
-  }
-
-  set originChain(value: Bytes) {
-    this.set("originChain", Value.fromBytes(value));
-  }
-
   get date(): BigInt {
     let value = this.get("date");
     return value!.toBigInt();
@@ -229,24 +193,6 @@ export class All extends Entity {
 
   set countBridged(value: BigInt) {
     this.set("countBridged", Value.fromBigInt(value));
-  }
-
-  get relayFees(): BigInt {
-    let value = this.get("relayFees");
-    return value!.toBigInt();
-  }
-
-  set relayFees(value: BigInt) {
-    this.set("relayFees", Value.fromBigInt(value));
-  }
-
-  get makerFees(): BigInt {
-    let value = this.get("makerFees");
-    return value!.toBigInt();
-  }
-
-  set makerFees(value: BigInt) {
-    this.set("makerFees", Value.fromBigInt(value));
   }
 
   get amountBridged(): BigInt {

@@ -54,9 +54,7 @@ export function handleDeny(event: Deny): void {}
 
 export function handleFile(event: File): void {}
 
-export function handleFlushed(event: Flushed): void {
-  
-}
+export function handleFlushed(event: Flushed): void {}
 
 export function handleRely(event: Rely): void {}
 
@@ -75,8 +73,12 @@ export function handleTeleportInitialized(event: TeleportInitialized): void {
     user.id = userId
     user.amountBridged = BigInt.fromI32(0)
     user.countBridged = BigInt.fromI32(0)
-    user.makerFees = BigInt.fromI32(0)
-    user.relayFees = BigInt.fromI32(0)
+    user.save()
+  }
+
+  if (event.receipt){
+    user.amountBridged = user.amountBridged.plus(amount)
+    user.countBridged = user.countBridged.plus(BigInt.fromI32(1))
     user.save()
   }
 
@@ -84,9 +86,8 @@ export function handleTeleportInitialized(event: TeleportInitialized): void {
   teleport.amount = amount
   teleport.date = event.block.timestamp
   teleport.originAddress = event.transaction.from
-  teleport.destChain = event.params.teleport.targetDomain
-  teleport.originChain = event.params.teleport.sourceDomain
   teleport.user = user.id
+  event.params
   
   if (to) {
     teleport.destinationAddress = to
@@ -99,22 +100,12 @@ export function handleTeleportInitialized(event: TeleportInitialized): void {
   if (all == null) {
     all = new All("all");
     all.amountBridged = BigInt.fromI32(0)
-    all.makerFees = BigInt.fromI32(0);
-    all.relayFees = BigInt.fromI32(0);
     all.countBridged = BigInt.fromI32(0);
     all.save()
   }
   all.countBridged = all.countBridged.plus(BigInt.fromI32(1))
   all.amountBridged = all.amountBridged.plus(amount)
-  
-  if (event.receipt){
-    user.amountBridged = user.amountBridged.plus(amount)
-    user.countBridged = user.countBridged.plus(BigInt.fromI32(1))
-    user.relayFees = user.relayFees.plus(BigInt.fromI32(1))
-    user.makerFees = user.makerFees.plus(BigInt.fromI32(1))
-    user.save()
-  }
-  
+    
   all.save()
   teleport.save()
   user.save()

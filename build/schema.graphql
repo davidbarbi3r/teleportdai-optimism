@@ -1,8 +1,6 @@
 type User @entity {
   id: ID!
   amountBridged: BigInt!
-  relayFees: BigInt!
-  makerFees: BigInt! 
   countBridged: BigInt!
   teleport: [Teleport!]! @derivedFrom(field: "user")
 }
@@ -11,8 +9,6 @@ type Teleport @entity {
   id: ID!
   originAddress: Bytes!
   destinationAddress: Bytes
-  destChain: Bytes!
-  originChain: Bytes!  
   date: BigInt!
   amount: BigInt!
   user: User!
@@ -21,8 +17,6 @@ type Teleport @entity {
 type All @entity {
   id: ID!
   countBridged: BigInt!
-  relayFees: BigInt!
-  makerFees: BigInt!
   amountBridged: BigInt!
 }
 
