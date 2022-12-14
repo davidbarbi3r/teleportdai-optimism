@@ -54,29 +54,61 @@ export function handleDeny(event: Deny): void {}
 
 export function handleFile(event: File): void {}
 
-export function handleFlushed(event: Flushed): void {}
+export function handleFlushed(event: Flushed): void {
+  
+}
 
 export function handleRely(event: Rely): void {}
 
 export function handleTeleportInitialized(event: TeleportInitialized): void {
   let id = event.transaction.hash.toHex();
-  let teleport = Teleport.load(id);
-  let from = event.transaction.from.toHex();
-  let amount = event.transaction.value;
+  let userId = event.transaction.from.toHex()
+  let teleport = new Teleport(id);
+  let to = event.transaction.to
+  let amount = event.params.teleport.amount
+
+  let user = User.load(id)
+
+  if (user == null){
+    user = new User(id)
+    user.id = userId
+    user.amountBridged = BigInt.fromI32(0)
+    user.countBridged = BigInt.fromI32(0)
+    user.makerFees = BigInt.fromI32(0)
+    user.relayFees = BigInt.fromI32(0)
+  }
+
+  teleport.id = id
+  teleport.amount = amount
+  teleport.date = event.block.timestamp
+  teleport.originAddress = event.transaction.from
+  teleport.destChain = event.params.teleport.targetDomain
+  teleport.originChain = event.params.teleport.sourceDomain
+  teleport.user = user.id
+  
+  if (to) {
+    teleport.destinationAddress = to
+    teleport.save()
+  }
+
+  teleport.save()
 
   //all entity setup
   let all = All.load("all");
   if (all == null) {
     all = new All("all");
+    all.id = event.block.timestamp.toHex()
     all.makerFees = BigInt.fromI32(0);
     all.relayFees = BigInt.fromI32(0);
     all.countBridged = BigInt.fromI32(0);
   }
 
   if (event.receipt){
-
+    user.amountBridged = user.amountBridged.plus(amount)
+    user.countBridged = user.countBridged.plus(BigInt.fromI32(1))
     all.countBridged = all.countBridged.plus(BigInt.fromI32(1))
     all.amountBridged = all.amountBridged.plus(amount)
-    all.save
+    all.save()
   }
+  all.save()
 }
