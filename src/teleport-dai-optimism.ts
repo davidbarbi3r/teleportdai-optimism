@@ -63,14 +63,15 @@ export function handleRely(event: Rely): void {}
 export function handleTeleportInitialized(event: TeleportInitialized): void {
   let id = event.transaction.hash.toHex();
   let userId = event.transaction.from.toHex()
-  let teleport = new Teleport(id);
   let to = event.transaction.to
   let amount = event.params.teleport.amount
+  
+  let teleport = new Teleport(id);
 
-  let user = User.load(id)
+  let user = User.load(userId)
 
   if (user == null){
-    user = new User(id)
+    user = new User(userId)
     user.id = userId
     user.amountBridged = BigInt.fromI32(0)
     user.countBridged = BigInt.fromI32(0)
@@ -97,21 +98,24 @@ export function handleTeleportInitialized(event: TeleportInitialized): void {
   let all = All.load("all");
   if (all == null) {
     all = new All("all");
-    all.id = event.block.timestamp.toHex()
+    all.amountBridged = BigInt.fromI32(0)
     all.makerFees = BigInt.fromI32(0);
     all.relayFees = BigInt.fromI32(0);
     all.countBridged = BigInt.fromI32(0);
+    all.save()
   }
+  all.countBridged = all.countBridged.plus(BigInt.fromI32(1))
+  all.amountBridged = all.amountBridged.plus(amount)
   
   if (event.receipt){
     user.amountBridged = user.amountBridged.plus(amount)
     user.countBridged = user.countBridged.plus(BigInt.fromI32(1))
-    all.countBridged = all.countBridged.plus(BigInt.fromI32(1))
-    all.amountBridged = all.amountBridged.plus(amount)
-    all.save()
+    user.relayFees = user.relayFees.plus(BigInt.fromI32(1))
+    user.makerFees = user.makerFees.plus(BigInt.fromI32(1))
+    user.save()
   }
   
+  all.save()
   teleport.save()
   user.save()
-  all.save()
 }
